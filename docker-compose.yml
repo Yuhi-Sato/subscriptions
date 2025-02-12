@@ -1,0 +1,30 @@
+version: '3'
+services:
+  db:
+    image: mysql:8.0
+    restart: always
+    volumes:
+      - mysql_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: myapp_development
+      MYSQL_USER: myapp
+      MYSQL_PASSWORD: mypassword
+    ports:
+      - "3306:3306"
+
+  api:
+    build: ./src/api
+    depends_on:
+      - db
+    volumes:
+      - ./src/api:/app
+    ports:
+      - "3123:3123"
+    environment:
+      DATABASE_HOST: db
+      DATABASE_USERNAME: myapp
+      DATABASE_PASSWORD: mypassword
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails server -b 0.0.0.0"
+volumes:
+  mysql_data:
