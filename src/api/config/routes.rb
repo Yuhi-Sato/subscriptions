@@ -11,6 +11,13 @@ Rails.application.routes.draw do
       post 'auth/login', to: 'auth#login'
       get 'users/me', to: 'users#me'
       put 'users/me', to: 'users#update'
+
+      # サブスクリプション関連のルート
+      resources :services do
+        resources :plans
+      end
+
+      resources :subscriptions
     end
   end
 
